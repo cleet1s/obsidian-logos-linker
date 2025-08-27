@@ -4,7 +4,7 @@
   "version": "0.1.8",
   "minAppVersion": "1.5.0",
   "description": "Convert Bible references into linked passages for ref.ly, Logos app, and Biblia.com.",
-  "author": "Hardie + ChatGPT",
-  "authorUrl": "https://hm3.rocks/me",
+  "author": "Hardie Midkiff",
+  "authorUrl": "https:/HM3.rocks/me",
   "isDesktopOnly": false
 }
