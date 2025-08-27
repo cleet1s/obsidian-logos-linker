@@ -1,0 +1,32 @@
+name: Release (Build & Package)
+on:
+  push:
+    tags:
+      - "v*"
+permissions:
+  contents: write
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run build
+      - run: |
+          test -f main.js || (echo "main.js missing after build" && exit 1)
+          test -f manifest.json || (echo "manifest.json missing" && exit 1)
+      - run: |
+          ZIP_NAME="obsidian-logos-linker-${{ github.ref_name }}.zip"
+          mkdir -p dist
+          zip -r "dist/$ZIP_NAME" manifest.json main.js styles.css README.md CHANGELOG.md package.json tsconfig.json
+          echo "ZIP_PATH=dist/$ZIP_NAME" >> $GITHUB_ENV
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ZIP_PATH }}
+          name: Logos Linker ${{ github.ref_name }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
