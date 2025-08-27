@@ -8,8 +8,7 @@
   "scripts": {
     "build": "tsc -p .",
     "watch": "tsc -w -p .",
-    "clean": "rimraf main.js main.js.map",
-    "dev": "npm run build && echo 'Build complete: main.js'"
+    "clean": "rimraf main.js main.js.map"
   },
   "devDependencies": {
     "obsidian": "^1.5.0",
