@@ -8,46 +8,38 @@ const DEFAULT_SETTINGS = {
     useClipboardIfNoSelection: true
 };
 /** -------- Helpers -------- */
-// Very forgiving: trims, normalizes whitespace/colon, keeps user’s book name.
 function normalizeRefForDots(refRaw) {
-    // "John 3:16-18" -> "John 3.16-18"
     return refRaw
         .trim()
         .replace(/\s+/g, " ")
         .replace(/:/g, ".")
-        .replace(/\u2013|\u2014/g, "-"); // en/em dashes -> hyphen
+        .replace(/\u2013|\u2014/g, "-");
 }
-// For ref.ly short link: “John3.16” / “John 3.16-18;ESV” both work. We’ll keep the user’s book text.
 function buildRefLy(refRaw, translation) {
     const withDots = normalizeRefForDots(refRaw).replace(/\s/g, "");
     return `https://ref.ly/${withDots};${(translation || "ESV").toUpperCase()}`;
 }
-// Build Logos app bridge via ref.ly’s logosres format:
-// Example: https://ref.ly/logosres/esv?ref=BibleESV.Jas1.1-27
 function buildLogosBridge(refRaw, translation) {
     const upper = (translation || "ESV").toUpperCase();
     const lower = (translation || "ESV").toLowerCase();
     const refForLogos = normalizeRefForDots(refRaw).replace(/\s/g, "");
     return `https://ref.ly/logosres/${lower}?ref=Bible${upper}.${refForLogos}`;
 }
-// Biblia path-style URLs like: https://biblia.com/bible/esv/hebrews/5/9 or with ranges: .../3/16-18
 function buildBiblia(refRaw, translation) {
     const t = (translation || "ESV").toLowerCase();
-    const raw = refRaw.trim().replace(/\u2013|\u2014/g, "-"); // normalize en/em dashes
-    // Accept inputs like: "Hebrews 5:9", "Heb 5:9-12", "1 John 4:7", "Jn 3:16"
+    const raw = refRaw.trim().replace(/\u2013|\u2014/g, "-");
     const m = raw.match(/^([\dI]{0,3}\s*[A-Za-z. ]+)\s+(\d+)(?::(\d+(?:-\d+)?))?$/i);
     if (m) {
         let book = m[1]
             .replace(/\./g, "")
             .trim()
             .toLowerCase()
-            .replace(/\s+/g, "-"); // "1 John" -> "1-john", "Song of Songs" -> "song-of-songs"
+            .replace(/\s+/g, "-");
         const chapter = m[2];
         const verses = m[3] ?? "";
         const path = verses ? `${book}/${chapter}/${verses}` : `${book}/${chapter}`;
         return `https://biblia.com/bible/${t}/${path}`;
     }
-    // Fallback: encoded format with dot for colon still works
     const refDots = refRaw.trim().replace(/:/g, ".").replace(/\s+/g, " ");
     const encoded = encodeURIComponent(refDots);
     return `https://biblia.com/bible/${t}/${encoded}`;
@@ -66,9 +58,7 @@ async function getReferenceFromEditorOrClipboard(app, editor, useClipboard) {
             if (clip && clip.trim().length > 0)
                 return clip.trim();
         }
-        catch {
-            // ignore; may be blocked by OS/Electron permissions
-        }
+        catch { }
     }
     return null;
 }
@@ -117,7 +107,6 @@ export default class LogosLinkerPlugin extends Plugin {
         await this.saveData(this.settings);
     }
 }
-/** -------- Settings Tab -------- */
 class LogosLinkerSettingTab extends PluginSettingTab {
     constructor(app, plugin) {
         super(app, plugin);
