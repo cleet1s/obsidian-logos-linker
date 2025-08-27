@@ -1,6 +1,6 @@
 {
   "name": "obsidian-logos-linker",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Convert Bible references into linked passages for ref.ly, Logos, and Biblia.com (Obsidian plugin).",
   "license": "MIT",
   "author": "Hardie Midkiff",
