@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es2020",
+    "module": "es2020",
+    "moduleResolution": "bundler",
+    "lib": [
+      "es2020",
+      "dom"
+    ],
+    "declaration": false,
+    "sourceMap": true,
+    "outDir": ".",
+    "rootDir": ".",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "main.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
